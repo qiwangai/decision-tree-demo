@@ -3,49 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Interactive decision tree demo" />
-  <title>Decision Tree</title>
+  <meta name="description" content="Interactive Decision Map" />
+  <title>Decision Map</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div>
-        <p>DECISIONS</p>
-        <h1>Decision tree</h1>
-      </div>
-      <div class="top-actions">
-        <label class="search"><span>⌕</span><input id="search" aria-label="Search decisions" placeholder="Search decisions" /></label>
-        <button id="reset">Reset view</button>
-      </div>
-    </header>
-
-    <section class="workspace">
-      <aside class="sidebar">
-        <p class="label">View</p>
-        <button class="view active" data-view="tree"><span>⌘</span><b>Tree</b><small>Parent–child links</small></button>
-        <button class="view" data-view="topics"><span>▦</span><b>Topics</b><small>Grouped decisions</small></button>
-        <div class="rule"></div>
-        <p class="label">Status</p>
-        <ul>
-          <li><i class="approved"></i>Approved <b>3</b></li>
-          <li><i class="review"></i>In review <b>2</b></li>
-          <li><i class="draft"></i>Draft <b>1</b></li>
-        </ul>
-        <p class="hint">Drag to pan<br />Scroll to zoom</p>
-      </aside>
-
-      <div class="canvas" id="canvas">
-        <div class="stage" id="stage"></div>
-        <div class="zoom">
-          <button id="zoomOut" aria-label="Zoom out">−</button>
-          <span id="zoomValue">80%</span>
-          <button id="zoomIn" aria-label="Zoom in">+</button>
+  <main class="page">
+    <section class="decision-card">
+      <header class="map-header">
+        <div>
+          <h1>Decision Map</h1>
+          <p>6 decisions · 6 links · 1 root · 0 standalone</p>
         </div>
-        <div class="minimap" id="minimap"><i></i></div>
-      </div>
+        <button class="icon-button" id="fitHeader" title="Fit graph" aria-label="Fit graph">⛶</button>
+      </header>
 
-      <aside class="details" id="details"></aside>
+      <div class="flow" id="flow">
+        <div class="stage" id="stage"></div>
+
+        <div class="tools-wrap">
+          <button class="tool-trigger" id="toolTrigger" aria-label="Graph tools" title="Graph tools" aria-expanded="false">
+            <span class="workflow-icon">⌘</span>
+          </button>
+          <div class="tools-menu" id="toolsMenu" hidden>
+            <button><span class="violet">○</span> New decision</button>
+            <button><span class="teal">＋</span> Add follow-up</button>
+            <hr />
+            <button><span>✎</span> Edit</button>
+            <button><span>⌫</span> Delete</button>
+            <hr />
+            <button id="tidy"><span>▦</span> Tidy layout</button>
+            <button id="pin"><span>⌖</span> Pin view</button>
+          </div>
+        </div>
+
+        <div class="zoom-top">
+          <button id="zoomOut" aria-label="Graph zoom out">−</button>
+          <span id="zoomValue">70%</span>
+          <button id="zoomIn" aria-label="Graph zoom in">+</button>
+        </div>
+
+        <div class="flow-controls">
+          <button id="controlIn" aria-label="Zoom in">＋</button>
+          <button id="controlOut" aria-label="Zoom out">−</button>
+          <button id="fit" aria-label="Fit view">⌗</button>
+          <button id="lock" aria-label="Lock view">⌑</button>
+        </div>
+
+        <div class="overview-wrap">
+          <button id="mapToggle" class="map-toggle" aria-expanded="true">▧ <span>Hide</span></button>
+          <div class="minimap" id="minimap"><i></i></div>
+        </div>
+      </div>
     </section>
   </main>
   <script src="app.js"></script>
