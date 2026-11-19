@@ -18,6 +18,31 @@
         <button class="icon-button" id="fitHeader" title="Fit graph" aria-label="Fit graph">⛶</button>
       </header>
 
+      <nav class="navigator" aria-label="Find decisions on the map">
+        <div class="nav-find">
+          <div class="date-jump">
+            <input type="date" id="dateInput" aria-label="Jump to date" />
+            <button id="dateGo">Go</button>
+          </div>
+          <div class="search-wrap">
+            <input type="search" id="titleSearch" placeholder="Search by title…" aria-label="Search decisions by title" autocomplete="off" />
+            <div class="search-results" id="searchResults" hidden></div>
+          </div>
+          <select id="topicSelect" aria-label="Jump to topic"><option value="">Topics</option></select>
+        </div>
+        <div class="nav-view">
+          <div class="mode-switch" aria-label="Decision map view">
+            <button data-mode="topics" class="active">Topics</button>
+            <button data-mode="graph">Graph</button>
+            <button data-mode="day">Day</button>
+            <button data-mode="week">Week</button>
+            <button data-mode="month">Month</button>
+          </div>
+          <button class="today-button" id="today">Today</button>
+          <div class="nav-zoom" id="navZoom"><button id="navZoomOut" aria-label="Zoom out">−</button><span id="navZoomValue">100%</span><button id="navZoomIn" aria-label="Zoom in">+</button></div>
+        </div>
+      </nav>
+
       <div class="flow" id="flow">
         <div class="stage" id="stage"></div>
 
@@ -26,11 +51,11 @@
             <span class="workflow-icon">⌘</span>
           </button>
           <div class="tools-menu" id="toolsMenu" hidden>
-            <button><span class="violet">○</span> New decision</button>
-            <button><span class="teal">＋</span> Add follow-up</button>
+            <button id="newDecision"><span class="violet">○</span> New decision</button>
+            <button id="addFollowup"><span class="teal">＋</span> Add follow-up</button>
             <hr />
-            <button><span>✎</span> Edit</button>
-            <button><span>⌫</span> Delete</button>
+            <button id="editDecision"><span>✎</span> Edit</button>
+            <button id="deleteDecision"><span>⌫</span> Delete</button>
             <hr />
             <button id="tidy"><span>▦</span> Tidy layout</button>
             <button id="pin"><span>⌖</span> Pin view</button>
@@ -57,6 +82,7 @@
       </div>
     </section>
   </main>
-  <script src="app.js?v=3"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
