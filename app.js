@@ -1,0 +1,29 @@
+const decisions=[
+ {id:'D-001',eyebrow:'Campaign direction',title:'Launch the AU creator campaign',summary:'Use a creator-led launch to build trust before scaling paid reach.',status:'Approved',owner:'Maya Chen',date:'12 Nov',topic:'Strategy',why:'Creator proof gives the proposition credibility and creates reusable paid assets.',parents:[]},
+ {id:'D-014',eyebrow:'Audience',title:'Prioritise first-time founders',summary:'Lead with clarity and speed for founders launching their first campaign.',status:'Approved',owner:'Noah Ellis',date:'14 Nov',topic:'Audience',why:'Research showed the sharpest pain around setup confidence, not feature depth.',parents:['D-001']},
+ {id:'D-018',eyebrow:'Channel mix',title:'Start with TikTok + Instagram',summary:'Concentrate the first six weeks on two creator-native channels.',status:'In review',owner:'Lina Park',date:'15 Nov',topic:'Channels',why:'Both channels support fast creative iteration and match audience habits.',parents:['D-001']},
+ {id:'D-022',eyebrow:'Creative system',title:'Build three reusable story angles',summary:'Organise briefs around confidence, speed and measurable control.',status:'Approved',owner:'Maya Chen',date:'16 Nov',topic:'Creative',why:'A small angle set makes cross-channel testing easier to interpret.',parents:['D-014','D-018']},
+ {id:'D-027',eyebrow:'Measurement',title:'Optimise for qualified trials',summary:'Use trial quality rather than raw lead volume as the launch signal.',status:'Draft',owner:'Ari Singh',date:'18 Nov',topic:'Measurement',why:'Low-intent leads distort early channel comparisons and sales workload.',parents:['D-018']},
+ {id:'D-031',eyebrow:'Experiment',title:'Run a 14-day creative sprint',summary:'Test six executions, then graduate the strongest two into paid.',status:'In review',owner:'Lina Park',date:'19 Nov',topic:'Creative',why:'A fixed learning window prevents scaling a weak concept too early.',parents:['D-022','D-027']}
+];
+const tree={'D-001':[55,240],'D-014':[390,75],'D-018':[390,390],'D-022':[750,85],'D-027':[750,410],'D-031':[1110,245]};
+const topics={'D-001':[45,135],'D-014':[335,135],'D-018':[625,135],'D-022':[915,135],'D-027':[1205,135],'D-031':[915,420]};
+let view='tree',selected='D-001',zoom=.8,pan={x:5,y:8},drag=null;
+const stage=document.querySelector('#stage'),canvas=document.querySelector('#canvas'),details=document.querySelector('#details'),zoomValue=document.querySelector('#zoomValue'),minimap=document.querySelector('#minimap');
+function positions(){return view==='tree'?tree:topics}
+function edge(from,to){const p=positions(),sx=p[from][0]+250,sy=p[from][1]+87,ex=p[to][0],ey=p[to][1]+87,mx=sx+Math.max(28,(ex-sx)/2);return `<span class="edge-h" style="left:${sx}px;top:${sy}px;width:${mx-sx}px"></span><span class="edge-v" style="left:${mx}px;top:${Math.min(sy,ey)}px;height:${Math.abs(ey-sy)}px"></span><span class="edge-h edge-end" style="left:${mx}px;top:${ey}px;width:${ex-mx}px"></span>`}
+function render(){
+ const p=positions();let html='';
+ if(view==='tree')decisions.forEach(d=>d.parents.forEach(parent=>html+=edge(parent,d.id)));
+ else ['Strategy','Audience','Channels','Creative','Measurement'].forEach((t,i)=>html+=`<div class="topic" style="left:${25+i*290}px">0${i+1} · ${t}</div>`);
+ decisions.forEach(d=>{const initials=d.owner.split(' ').map(n=>n[0]).join('');html+=`<button class="node ${selected===d.id?'selected':''}" data-id="${d.id}" style="left:${p[d.id][0]}px;top:${p[d.id][1]}px"><span class="node-top"><span class="node-id">${d.id}</span><span class="chip ${d.status.replace(' ','-')}">${d.status}</span></span><h3>${d.title}</h3><p>${d.summary}</p><span class="node-foot"><span class="avatar">${initials}</span>${d.owner}</span></button>`});
+ stage.innerHTML=html;stage.style.transform=`translate(${pan.x}px,${pan.y}px) scale(${zoom})`;zoomValue.textContent=`${Math.round(zoom*100)}%`;
+ document.querySelectorAll('.node').forEach(n=>n.onclick=()=>{selected=n.dataset.id;render()});
+ const d=decisions.find(x=>x.id===selected);details.innerHTML=`<div class="details-head"><span class="chip ${d.status.replace(' ','-')}">${d.status}</span><span>${d.id}</span></div><p class="eyebrow">${d.eyebrow}</p><h2>${d.title}</h2><p class="summary">${d.summary}</p><div class="meta"><div><span>Owner</span><b>${d.owner}</b></div><div><span>Updated</span><b>${d.date}</b></div><div><span>Topic</span><b>${d.topic}</b></div></div><section><h4>Why this decision</h4><p>${d.why}</p></section>`;
+ minimap.querySelectorAll('span').forEach(s=>s.remove());decisions.forEach(d=>{const s=document.createElement('span');s.style.left=p[d.id][0]/10+'px';s.style.top=p[d.id][1]/8+'px';minimap.appendChild(s)});
+}
+function setZoom(next){zoom=Math.max(.5,Math.min(1.2,next));render()}
+document.querySelectorAll('.view').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x===b));pan={x:5,y:8};zoom=.8;render()});
+document.querySelector('#zoomIn').onclick=()=>setZoom(zoom+.1);document.querySelector('#zoomOut').onclick=()=>setZoom(zoom-.1);document.querySelector('#reset').onclick=()=>{zoom=.8;pan={x:5,y:8};render()};
+document.querySelector('#search').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.node').forEach(n=>{const d=decisions.find(x=>x.id===n.dataset.id);n.classList.toggle('hidden',!`${d.id} ${d.title} ${d.owner} ${d.topic}`.toLowerCase().includes(q))})};
+canvas.onpointerdown=e=>{if(e.target.closest('button'))return;drag={x:e.clientX,y:e.clientY,px:pan.x,py:pan.y};canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging')};canvas.onpointermove=e=>{if(!drag)return;pan={x:drag.px+e.clientX-drag.x,y:drag.py+e.clientY-drag.y};stage.style.transform=`translate(${pan.x}px,${pan.y}px) scale(${zoom})`};canvas.onpointerup=()=>{drag=null;canvas.classList.remove('dragging')};canvas.onwheel=e=>{e.preventDefault();setZoom(zoom-e.deltaY*.001)},{passive:false};render();

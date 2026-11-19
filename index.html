@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive decision tree demo" />
+  <title>Decision Tree</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p>DECISIONS</p>
+        <h1>Decision tree</h1>
+      </div>
+      <div class="top-actions">
+        <label class="search"><span>⌕</span><input id="search" aria-label="Search decisions" placeholder="Search decisions" /></label>
+        <button id="reset">Reset view</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="sidebar">
+        <p class="label">View</p>
+        <button class="view active" data-view="tree"><span>⌘</span><b>Tree</b><small>Parent–child links</small></button>
+        <button class="view" data-view="topics"><span>▦</span><b>Topics</b><small>Grouped decisions</small></button>
+        <div class="rule"></div>
+        <p class="label">Status</p>
+        <ul>
+          <li><i class="approved"></i>Approved <b>3</b></li>
+          <li><i class="review"></i>In review <b>2</b></li>
+          <li><i class="draft"></i>Draft <b>1</b></li>
+        </ul>
+        <p class="hint">Drag to pan<br />Scroll to zoom</p>
+      </aside>
+
+      <div class="canvas" id="canvas">
+        <div class="stage" id="stage"></div>
+        <div class="zoom">
+          <button id="zoomOut" aria-label="Zoom out">−</button>
+          <span id="zoomValue">80%</span>
+          <button id="zoomIn" aria-label="Zoom in">+</button>
+        </div>
+        <div class="minimap" id="minimap"><i></i></div>
+      </div>
+
+      <aside class="details" id="details"></aside>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
